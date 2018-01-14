@@ -96,14 +96,14 @@ func (client *Client) sendMetrics(metrics []Metric) error {
 	return nil
 }
 
-func (graphite *Client) Send(stat string, value string) error {
+func (client *Client) Send(stat string, value string) error {
 	metrics := make([]Metric, 1)
 	metrics[0] = Metric{
 		Name:      stat,
 		Value:     value,
 		Timestamp: time.Now().Unix(),
 	}
-	err := graphite.sendMetrics(metrics)
+	err := client.sendMetrics(metrics)
 	if err != nil {
 		return err
 	}
