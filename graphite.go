@@ -63,20 +63,14 @@ func (client *Client) Disconnect() error {
 	return err
 }
 
-func (client *Client) SendMetric(metric Metric) error {
-	metrics := make([]Metric, 1)
-	metrics[0] = metric
-
-	return client.sendMetrics(metrics)
-}
-
 func (client *Client) sendMetrics(metrics []Metric) error {
 
-	zeroed_metric := Metric{} // ignore unintialized metrics
+	empty_metric := Metric{}
 	buf := bytes.NewBufferString("")
+
 	for _, metric := range metrics {
-		if metric == zeroed_metric {
-			continue // ignore unintialized metrics
+		if metric == empty_metric {
+			continue
 		}
 		if metric.Timestamp == 0 {
 			metric.Timestamp = time.Now().Unix()
@@ -94,6 +88,13 @@ func (client *Client) sendMetrics(metrics []Metric) error {
 		}
 	}
 	return nil
+}
+
+func (client *Client) SendMetric(metric Metric) error {
+	metrics := make([]Metric, 1)
+	metrics[0] = metric
+
+	return client.sendMetrics(metrics)
 }
 
 func (client *Client) Send(stat string, value string) error {
